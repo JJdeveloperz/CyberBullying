@@ -5,8 +5,10 @@ reddit = praw.Reddit(client_id='X7sHKltu1y1wVQ', client_secret='3c7Ff-yZUhrlI8yk
 
 df=[]
 i = 0
-for submission in reddit.subreddit("news").hot(limit=100):
-    submission.comments.replace_more(limit=0)
+topics=1000
+loadmore=5
+for submission in reddit.subreddit("news").hot(limit=topics):
+    submission.comments.replace_more(limit=loadmore)
     comment_queue = submission.comments[:]
     while comment_queue:
         comment = comment_queue.pop(0)
@@ -21,6 +23,5 @@ for submission in reddit.subreddit("news").hot(limit=100):
 
 df = pd.DataFrame(df,columns=['title', 'comment','score','awards'])
 df['comment'] = df['comment'].apply(lambda x : x.replace('\n',''))
-# df['awards'] = df['awards'].apply(lambda x : x.replace('gid_1','Gold'))
-df.to_csv('comments.csv',index = False)
+df.to_csv('/home/jagneto/Desktop/comments.csv',index = False)
 df
