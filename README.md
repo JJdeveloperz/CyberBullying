@@ -6,5 +6,7 @@ Change loadmore value to increase or decrease number of times load more comments
 
 #Awards
 gid_1=Gold
+
 gid_2=Silver
+
 gid_3=Bronze
