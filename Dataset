@@ -1,0 +1,26 @@
+import praw
+import pandas as pd
+pd.set_option('display.max_colwidth', -1)
+reddit = praw.Reddit(client_id='X7sHKltu1y1wVQ', client_secret='3c7Ff-yZUhrlI8ykt7uP-CB12-w', user_agent='Scrapedred')
+
+df=[]
+i = 0
+for submission in reddit.subreddit("news").hot(limit=100):
+    submission.comments.replace_more(limit=0)
+    comment_queue = submission.comments[:]
+    while comment_queue:
+        comment = comment_queue.pop(0)
+        df.append([submission.title,comment.body,comment.score,comment.gildings])
+        t = []
+        t.extend(comment.replies)
+        while t:
+            df.append([submission.title,reply.body,reply.score,reply.gildings])
+            reply = t.pop(0)
+
+
+
+df = pd.DataFrame(df,columns=['title', 'comment','score','awards'])
+df['comment'] = df['comment'].apply(lambda x : x.replace('\n',''))
+# df['awards'] = df['awards'].apply(lambda x : x.replace('gid_1','Gold'))
+df.to_csv('comments.csv',index = False)
+df
